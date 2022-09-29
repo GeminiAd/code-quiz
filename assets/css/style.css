@@ -1,0 +1,23 @@
+* {
+    box-sizing: border-box;
+}
+
+/*
+ *  The header contains two elements: the link to view highscores on the left and the timer on the right
+ */
+header {
+    width: 100%;
+    height: 50px;
+
+    font-size: 18px;
+
+    padding: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+}
