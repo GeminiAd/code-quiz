@@ -42,8 +42,6 @@ class Question {
             questionSection.appendChild(buttonToAdd);
         }
 
-        console.log(divToAdd);
-
         return divToAdd;
     }
 }
@@ -67,15 +65,9 @@ const q1 = new Question(
     2
 )
 
-console.log(q1);
-
 var main = document.querySelector("main");
 var body = document.querySelector("body");
 var startQuizButton = document.getElementById("start-quiz-button");
-
-console.log(main);
-console.log(body);
-console.log(startQuizButton);
 
 startQuizButton.addEventListener("click", function() {
     startQuiz();
