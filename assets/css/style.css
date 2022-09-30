@@ -22,7 +22,7 @@ a {
     text-decoration: none;
 }
 
-main {
+#splash-page {
     margin: 50px;
 
     display: flex;
@@ -62,7 +62,7 @@ button {
     color: white;
 }
 
-div {
+.question-div {
     margin: 50px;
 
     display: flex;
