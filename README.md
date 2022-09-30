@@ -28,6 +28,8 @@ Navigate to:
 
 ## Credits
 
+Manuel Nunes for a mockup of the site and some quiz question examples that I used.
+
 ## Author
 
 Adam Ferro
