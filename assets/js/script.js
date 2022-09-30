@@ -54,6 +54,22 @@ class Question {
     }
 }
 
+/* The list of Questions for our Quiz */
+const quizQuestions = [
+    new Question(
+        "Which of the following IS NOT a primitive data type in JavaScript?",
+        ["string", "boolean", "class", "number"],
+        2),
+    new Question(
+        "The statement in an if-else statement is enclosed within ______.",
+        ["parentheses", "curly brackets", "quotes", "square brackets"],
+        0),
+    new Question(
+        "Arrays in JavaScript can be used to store ______.",
+        ["numbers and strings", "other arrays", "booleans", "all of the above"],
+        3)
+];
+
 var bodyElement = document.querySelector("body");
 var mainElement = document.querySelector("main");
 var splashPageElement = document.getElementById("splash-page");
@@ -63,6 +79,7 @@ var timerElement = document.getElementById("timer");
 const maxTime = 75;
 
 var timeLeft = 0;
+var currentQuestion;
 
 /* Clears the area below the header of content, whatever that content is. */
 function clearMainContent() {
@@ -90,21 +107,23 @@ function startTimer() {
     setTimerText();
 
     var timeInterval = setInterval(function () {
-        console.log(timeLeft);
         timeLeft--;
         setTimerText();
 
         /*  If the time remaining is 0, let's stop the timer and stop the quiz. */
         if (timeLeft === 0) {
             clearInterval(timeInterval);
+            stopQuiz();
         }
     }, 1000);
 }
 
 /* The logic of starting the quiz will go here. */
 function startQuiz() {
+    currentQuestion = 0;
+
     clearMainContent();
-    loadQuestion(q1);
+    loadQuestion(quizQuestions[currentQuestion]);
     startTimer();
 }
 
@@ -112,12 +131,6 @@ function startQuiz() {
 function stopQuiz() {
 
 }
-
-const q1 = new Question(
-    "Which of the following IS NOT a primitive data type in JavaScript?",
-    ["string", "boolean", "class", "number"],
-    2
-)
 
 startQuizButtonElement.addEventListener("click", function() {
     startQuiz();
