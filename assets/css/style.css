@@ -21,3 +21,43 @@ header {
 a {
     text-decoration: none;
 }
+
+main {
+    margin: 50px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin: 5px;
+    padding: 5px;
+
+    font-size: 52px;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 5px;
+    padding: 5px;
+
+    width: 50%;
+
+    line-height: 150%;
+
+    font-size: 24px;
+
+    text-align: center;
+}
+
+button {
+    padding: 10px;
+    border: 0;
+    margin: 5px;
+
+    border-radius: 10px;
+
+    background-color:darkslateblue;
+    color: white;
+}
