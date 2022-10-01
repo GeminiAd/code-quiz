@@ -1,4 +1,39 @@
 /*
+ *  This is our object representing a highscore.
+ *
+ *  initials:   A string representing the initials of the user with the highscore.
+ *  score:      A number representing the score.
+ */
+class Highscore {
+    constructor(initials, score) {
+        this.initials = initials;
+        this.score = score;
+    }
+
+    /* 
+     *  This is the function that we will use to sort each highscore in the highscores array.
+     *
+     *  inputs:
+     *      1. A Highscore Object a
+     *      2. A Highscore Object b
+     * 
+     *  The compare function supplied to the array function sort must return:
+     *      1. 0 if the two values are equal.
+     *      2. 1 if a > b.
+     *      3. 2 if a < b.
+     */
+    static sort(a, b) {
+        if (a.score === b.score) {
+            return 0;
+        } else if (a.score > b.score) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+}
+
+/*
  *  This is going to be our object that represents a single question in this quiz.
  *
  *  question:           A string representing the text of the question.
@@ -74,6 +109,8 @@ const quizQuestions = [
         3)
 ];
 
+const maxTime = 75;
+
 var bodyElement = document.querySelector("body");
 var mainElement = document.querySelector("main");
 var splashPageElement = document.getElementById("splash-page");
@@ -84,7 +121,10 @@ var currentQuestionIndex;
 var timeLeft = 0;
 var timeInterval; // I need to define the timeInterval here so I can stop it when the user answers all the Questions
 
-const maxTime = 75;
+/*
+ *  The highscores will be stored as an array of Highscore Objects.
+ */
+var highscores;
 
 /*
  *  Defines the behaviour of the quiz when an answer button is clicked.
@@ -241,17 +281,22 @@ function displayCorrectness(answer) {
 /*
  *  Initializes some content before the game is played.
  *  Specifically, I'm going to create all of the code quiz screen HTML elements before the game starts so it's quick and easy to load.
- *  Additionally, I need to grab any highscores that are saved locally, and, if there are none, create an entry.
+ *  Additionally, I need to load any highscores, if they exist
  */
 function initializeContent() {
     console.log("Initializing Content");
 
     createDonePage();
+    loadHighscores();
 }
 
 /* Loads the given HTML element into the main content window below the header. */
 function loadContent(element) {
     mainElement.appendChild(element);
+}
+
+function loadHighscores() {
+    highscores = [];
 }
 
 /* Loads the given question object into the main content window. */
