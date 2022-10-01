@@ -16,27 +16,17 @@ class Question {
      *  Returns the HTML representation of this question.
      *
      *  The HTML returned will be of the format:
-     *  <div class="question-div">
-     *      <section class="question-section">
-     *          <h3 class="question-prompt">this.question</h3>
-     *          <button class="answer-button" id="answer-button-0">this.answers[0]</button>
-     *          <button class="answer-button" id="answer-button-1">this.answers[1]</button>
-     *          <button class="answer-button" id="answer-button-2">this.answers[2]</button>
-     *          <button class="answer-button" id="answer-button-3">this.answers[3]</button>
-     *      </section>
-     *  </div>
-     * 
-     *  NOTE: I'm wrapping the question content in a div element only so that I can display the question
-     *  prompt such that it's aligned to the left of the content window at 20% width.
+     *  <section class="question-section">
+     *      <h3 class="question-prompt">this.question</h3>
+     *      <button class="answer-button" id="answer-button-0">this.answers[0]</button>
+     *      <button class="answer-button" id="answer-button-1">this.answers[1]</button>
+     *      <button class="answer-button" id="answer-button-2">this.answers[2]</button>
+     *      <button class="answer-button" id="answer-button-3">this.answers[3]</button>
+     *  </section>
      */
     parseHTML() {
-        var divToAdd = document.createElement("div");
-        divToAdd.className = "question-div";
-
         var questionSection = document.createElement("section");
         questionSection.className = "question-section";
-
-        divToAdd.appendChild(questionSection);
     
         var questionPrompt = document.createElement("h3");
         questionPrompt.className = "question-prompt";
@@ -48,6 +38,13 @@ class Question {
             var buttonToAdd = document.createElement("button");
             buttonToAdd.className = "answer-button";
             buttonToAdd.id = "answer-button-" + i;
+
+            if (i === this.correctAnswerIndex) {
+                buttonToAdd.setAttribute("correct", true);
+            } else {
+                buttonToAdd.setAttribute("correct", false);
+            }
+
             buttonToAdd.textContent = (i + 1) + ". " + this.answers[i];
 
             buttonToAdd.addEventListener("click", answerButtonOnClick);
@@ -55,7 +52,7 @@ class Question {
             questionSection.appendChild(buttonToAdd);
         }
 
-        return divToAdd;
+        return questionSection;
     }
 }
 
@@ -81,11 +78,10 @@ var splashPageElement = document.getElementById("splash-page");
 var startQuizButtonElement = document.getElementById("start-quiz-button");
 var timerElement = document.getElementById("timer");
 var currentQuestionElement;
+var currentQuestionIndex;
+var timeLeft = 0;
 
 const maxTime = 75;
-
-var timeLeft = 0;
-var currentQuestion;
 
 /*
  *  Defines the behaviour of the quiz when an answer button is clicked.
@@ -95,7 +91,7 @@ var currentQuestion;
 function answerButtonOnClick(event) {
     var buttonPressed = event.target;
 
-    var correct = checkIfCorrect(buttonPressed.id, quizQuestions[currentQuestion]);
+    var correct = checkIfCorrect(buttonPressed);
     
     /* If the answer was incorrect, we remove 10 seconds from timeLeft and update it. */
     if (!correct) {
@@ -110,18 +106,17 @@ function answerButtonOnClick(event) {
     var timeInterval = setInterval(function () {
         clearInterval(timeInterval);
         nextQuestion();
-    }, 500);
+    }, 600);
 }
 
 /* 
  *  Checks if the answer is correct when given the id of the button that was pressed and the question it is from.
  *  Returns true if it is correct, or false if it is not.
  */
-function checkIfCorrect(answerId, question) {
-    answerButtonPressedIndex = parseInt(answerId[answerId.length - 1]);
-    var correctIndex = question.correctAnswerIndex;
+function checkIfCorrect(answerButtonElement) {
+    var correct = answerButtonElement.getAttribute("correct");
 
-    return (correctIndex === answerButtonPressedIndex);
+    return correct === "true";
 }
 
 /* Clears the area below the header of content, whatever that content is. */
@@ -154,7 +149,13 @@ function loadQuestion(q) {
     mainElement.appendChild(currentQuestionElement);
 }
 
-/* The logic of proceeding to the next question will go here. */
+/* 
+ *  The logic of proceeding to the next question will go here.
+ *  The steps we need to take to proceed to the next question:
+ *      1. Clear the main content window.
+ *      2. Check if we are at the end of the quiz. If so, end the quiz and proceed to the highscore screen
+ *      3. Otherwise, load the next question
+ */
 function nextQuestion() {
     console.log("CLEAR PAGE");
 }
@@ -195,10 +196,10 @@ function startTimer() {
 
 /* The logic of starting the quiz will go here. */
 function startQuiz() {
-    currentQuestion = 0;
+    currentQuestionIndex = 0;
 
     clearMainContent();
-    loadQuestion(quizQuestions[currentQuestion]);
+    loadQuestion(quizQuestions[currentQuestionIndex]);
     startTimer();
 }
 
