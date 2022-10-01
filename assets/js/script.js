@@ -80,7 +80,6 @@ var splashPageElement = document.getElementById("splash-page");
 var startQuizButtonElement = document.getElementById("start-quiz-button");
 var timerElement = document.getElementById("timer");
 var donePageElement;
-var currentQuestionElement;
 var currentQuestionIndex;
 var timeLeft = 0;
 var timeInterval; // I need to define the timeInterval here so I can stop it when the user answers all the Questions
@@ -173,7 +172,7 @@ function createDonePage() {
     /* 3. Create a text element displaying the users score. */
     var textToAdd = document.createElement("p");
     textToAdd.className = "score-text";
-    textToAdd.textContent = "Your score is ";
+    textToAdd.textContent = "Your final score is: ";
 
     /* 4. Create a span element where we can alter the users score, add it as a child to the text element. */
     var spanToAdd = document.createElement("span");
@@ -207,6 +206,7 @@ function createDonePage() {
     var buttonToAdd = document.createElement("button");
     buttonToAdd.id = "submit-initials-button";
     buttonToAdd.textContent = "Submit";
+    buttonToAdd.addEventListener("click", submitInitialsButtonClick);
 
     formElementToAdd.appendChild(buttonToAdd);
 
@@ -249,10 +249,15 @@ function initializeContent() {
     createDonePage();
 }
 
-/* Loads a question into the content window below the header. */
-function loadQuestion(q) {
-    currentQuestionElement = q.element;
-    mainElement.appendChild(currentQuestionElement);
+/* Loads the given HTML element into the main content window below the header. */
+function loadContent(element) {
+    mainElement.appendChild(element);
+}
+
+/* Loads the given question object into the main content window. */
+function loadQuestion(question) {
+    currentQuestionElement = question.element;
+    loadContent(currentQuestionElement);
 }
 
 /* 
@@ -326,6 +331,7 @@ function startQuiz() {
  *  When we stop the quiz we must:
  *  1. Stop the timer.
  *  2. Load the done page.
+ *  3. Update the user score on the done page.
  */
 function stopQuiz() {
     /* 1. Stop the timer. */
@@ -333,10 +339,23 @@ function stopQuiz() {
     console.log("QUIZ STOPPED");
 
     /* 2. Load the done page. */
+    loadContent(donePageElement);
+
+    /* 3. Update the user score on the done page. */
+    updateScore();
 }
 
-startQuizButtonElement.addEventListener("click", function() {
-    startQuiz();
-});
+function submitInitialsButtonClick(event) {
+    event.preventDefault();
+}
+
+/* Updates the user score in the done page when the user finishes the game. */
+function updateScore() {
+    var scoreTextElement = document.getElementById("score");
+    console.log(scoreTextElement);
+    scoreTextElement.textContent = timeLeft;
+}
+
+startQuizButtonElement.addEventListener("click", startQuiz);
 
 initializeContent();

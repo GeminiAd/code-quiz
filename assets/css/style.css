@@ -108,3 +108,43 @@ button {
 
     border-top: thick solid gray;
 }
+
+.done-section {
+    margin-top: 50px;
+
+    margin-left: 20%;
+}
+
+.done-section-header {
+    font-weight: bold;
+    font-size: 44px;
+
+    padding: 10px;
+    margin: 10px;
+}
+
+.score-text {
+    padding: 10px;
+    margin: 10px;
+
+    font-size: 18px;
+}
+
+.submit-initials-form {
+    padding: 10px;
+    margin: 10px;
+}
+
+.submit-initials-label {
+    padding: 5px;
+
+    font-style: italic;
+}
+
+#submit-initials-button {
+    margin: 5px;
+}
+
+#initials {
+    padding: 5px;
+}
