@@ -1,3 +1,7 @@
+:root {
+    --dark: darkslateblue;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -18,8 +22,11 @@ header {
     align-items: center;
 }
 
-a {
-    text-decoration: none;
+#highscores-link {
+    font-weight: bold;
+    font-size: 20px;
+
+    color: var(--dark);
 }
 
 #splash-page {
@@ -58,19 +65,14 @@ button {
 
     border-radius: 10px;
 
-    background-color:darkslateblue;
+    background-color: var(--dark);
     color: white;
 }
 
-.question-div {
-    margin: 50px;
-
-    display: flex;
-    justify-content: right;
-}
-
 .question-section {
-    width: 80%;
+    margin-top: 50px;
+
+    margin-left: 20%;
 }
 
 .question-prompt {
