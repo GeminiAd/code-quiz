@@ -154,9 +154,8 @@ function clearMainContent() {
  *      4. Create a span element where we can alter the users score, add it as a child to the text element.
  *      5. Add the text element as child of the section element.
  *      6. Create a form element, create and add child label, input, and submit button elements to it.
- *      7. Create a text input element, add it to the section element.
- *      8. Create a submit button, add it to the section element.
- *      9. Set our global reference to the done page equal to the section element.
+ *      7. Add the form element as a child of the section element.
+ *      8. Set our global reference to the done page equal to the section element.
  */
 function createDonePage() {
     console.log("Creating the done page.");
@@ -185,8 +184,39 @@ function createDonePage() {
     sectionToCreate.appendChild(textToAdd);
 
     /* 6. Create a form element, create and add child label, input, and submit button elements to it. */
+    var formElementToAdd = document.createElement("form");
+    formElementToAdd.className = "submit-initials-form";
+
+    var labelToAdd = document.createElement("label");
+    labelToAdd.className = "submit-initials-label";
+    labelToAdd.textContent = "Enter your initials: ";
+    labelToAdd.setAttribute("for", "initials");
+
+    formElementToAdd.appendChild(labelToAdd);
+
+    var inputToAdd = document.createElement("input");
+    inputToAdd.setAttribute("type", "text");
+    inputToAdd.id = "initials";
+    inputToAdd.setAttribute("name", "initials");
+    inputToAdd.setAttribute("minlength", "2");
+    inputToAdd.setAttribute("maxlength", "2");
+    inputToAdd.setAttribute("size", "10");
+
+    formElementToAdd.appendChild(inputToAdd);
+
+    var buttonToAdd = document.createElement("button");
+    buttonToAdd.id = "submit-initials-button";
+    buttonToAdd.textContent = "Submit";
+
+    formElementToAdd.appendChild(buttonToAdd);
+
+    /* 7. Add the form element as a child of the section element. */
+    sectionToCreate.appendChild(formElementToAdd);
 
     console.log(sectionToCreate);
+
+    /* 8. Set our global reference to the done page equal to the section element. */
+    donePageElement = sectionToCreate;
 }
 
 /* 
