@@ -109,7 +109,11 @@ const quizQuestions = [
     new Question(
         "Arrays in JavaScript can be used to store ______.",
         ["numbers and strings", "other arrays", "booleans", "all of the above"],
-        3)
+        3),
+    new Question(
+        "JavaScript is an example of a ________-typed programming language.",
+        ["objectively", "dynamically", "relatively", "statically"],
+        1)
 ];
 
 const maxTime = 75;
