@@ -441,10 +441,17 @@ function loadContent(element) {
 }
 
 function loadHighscores() {
-    highscores = [ 
-        new Highscore("AF", 80),
-        new Highscore("BC", 65),
-        new Highscore("BM", 30)];
+    var stringifiedHighscores = localStorage.getItem("highscores");
+
+    /* If localStorage.getItem("highscores") returns null means there is no entry and we have to create it. */
+    if (!stringifiedHighscores) {
+        highscores = [];
+        writeHighscores();
+    } else {
+        console.log(stringifiedHighscores);
+        highscores = JSON.parse(stringifiedHighscores);
+        console.log(highscores);
+    }
 }
 
 /* Loads the given question object into the main content window. */
@@ -645,6 +652,8 @@ function updateScore() {
 
 /* Writes our list of highscores to local storage. */
 function writeHighscores() {
+    var stringifiedHighscores = JSON.stringify(highscores);
+    localStorage.setItem("highscores", stringifiedHighscores);
 }
 
 initializeContent();
