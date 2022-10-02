@@ -222,9 +222,41 @@ function checkIfCorrect(answerButtonElement) {
     return correct === "true";
 }
 
+/* 
+ *  Checks the given string input, and make sure it is a valid initials submission.
+ *  Specifically, the initials input should be of length two, and each character should either be a capital letter or lowercase letter.
+ *  Returns true if this is valid input, false otherwise.
+ */
+function checkInitialsInput(input) {
+    var upperCaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var lowerCaseCharacters = "abcdefghijklmnopqrstuvwxyz";
+    var validCharacters = upperCaseCharacters + lowerCaseCharacters;
+
+    console.log(upperCaseCharacters.length);
+    console.log(lowerCaseCharacters.length);
+
+    if (input.length !== 2) {
+        return false;
+    } else {
+        for (var i = 0; i < input.length; i++) {
+            if (!validCharacters.charAt(input[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
 /* Clears the area below the header of content, whatever that content is. */
 function clearMainContent() {
     mainElement.firstElementChild.remove();
+}
+
+/* Clears the error text below the initials submission form. */
+function clearErrorText() {
+    var errorTextElement = document.querySelector(".submission-error-text");
+    errorTextElement.textContent = "";
 }
 
 /* 
@@ -284,6 +316,7 @@ function createDonePage() {
     inputToAdd.setAttribute("minlength", "2");
     inputToAdd.setAttribute("maxlength", "2");
     inputToAdd.setAttribute("size", "10");
+    inputToAdd.required = true;
 
     formElementToAdd.appendChild(inputToAdd);
 
@@ -298,6 +331,12 @@ function createDonePage() {
 
     /* 7. Add the form element as a child of the section element. */
     sectionToCreate.appendChild(formElementToAdd);
+
+    /* Create a little section for text to display if there is an error with the initials submission and add as child to the section. */
+    var errorTextToAdd = document.createElement("p");
+    errorTextToAdd.className = "submission-error-text";
+
+    sectionToCreate.appendChild(errorTextToAdd);
 
     console.log(sectionToCreate);
 
@@ -322,6 +361,13 @@ function displayCorrectness(answer) {
 
     var questionSectionElement = document.querySelector(".question-section");
     questionSectionElement.appendChild(pElementToAdd);
+}
+
+/* Displays a some text below the input box indicating there was an error with the initials submission. */
+function displaySubmissionErrorText() {
+    var errorTextElement = document.querySelector(".submission-error-text");
+    errorTextElement.textContent = "Error: initials must be two characters chosen from uppercase or lowercase characters.";
+    console.log(errorTextElement);
 }
 
 /*
@@ -407,8 +453,6 @@ function generateHighscoresPage() {
 
     highscoresSectionElement.appendChild(clearHighscoresButtonToAdd);
 
-    console.log(highscoresSectionElement);
-
     /* 8. Return the section element. */
     return highscoresSectionElement;
 }
@@ -452,9 +496,7 @@ function loadHighscores() {
         highscores = [];
         writeHighscores();
     } else {
-        console.log(stringifiedHighscores);
         highscores = JSON.parse(stringifiedHighscores);
-        console.log(highscores);
     }
 }
 
@@ -613,7 +655,6 @@ function startQuiz() {
 function stopQuiz() {
     /* 1. Stop the timer. */
     clearInterval(timeInterval);
-    console.log("QUIZ STOPPED");
 
     /* 2. Clear the main content window. */
     clearMainContent();
@@ -637,15 +678,25 @@ function stopQuiz() {
 function submitInitialsButtonClick(event) {
     event.preventDefault(); // Stops page refresh on click
 
+    console.log(event);
+
     /* 1. Grab the input initials from the text input */
     var textInputElement = document.getElementById("initials");
     var initialsToAdd = textInputElement.value;
 
-    /* 2. Add a new Highscores Object to our highscores list with the input initials and final score. */
-    addHighscore(new Highscore(initialsToAdd, finalScore));
+    var valid = checkInitialsInput(initialsToAdd);
 
-    /* 3. Display the Highscores Page. */
-    displayHighscoresPage();
+    if (valid) {
+        clearErrorText();
+
+        /* 2. Add a new Highscores Object to our highscores list with the input initials and final score. */
+        addHighscore(new Highscore(initialsToAdd, finalScore));
+
+        /* 3. Display the Highscores Page. */
+        displayHighscoresPage();
+    } else {
+        displaySubmissionErrorText();
+    }
 }
 
 /* Updates the user score in the done page when the user finishes the game. */

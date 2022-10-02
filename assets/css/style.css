@@ -191,3 +191,10 @@ h1 {
     color: var(--light-button);
     cursor: pointer;
 }
+
+.submission-error-text {
+    padding: 10px;
+    margin: 10px;
+    font-style: italic;
+    color: red;
+}
