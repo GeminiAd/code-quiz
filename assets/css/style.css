@@ -45,7 +45,7 @@ h1 {
     font-weight: bold;
 }
 
-h2 {
+.splash-subheader {
     margin: 5px;
     padding: 5px;
 
@@ -58,7 +58,7 @@ h2 {
     text-align: center;
 }
 
-button {
+.round {
     padding: 5px;
     border: 0;
     margin: 5px;
@@ -145,4 +145,37 @@ button {
 
 #initials {
     padding: 5px;
+}
+
+.highscores-section {
+    width: 50%;
+
+    margin-top: 50px;
+    margin-left: 20%;
+}
+
+.highscores-header {
+    margin: 5px;
+    padding: 5px;
+
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.highscore {
+    padding: 5px;
+    margin: 5px;
+
+    line-height: 150%;
+
+    background-color: beige;
+}
+
+#highscores-button {
+    border: 0;
+
+    font-size: 20px;
+
+    background-color: white;
+    color: var(--dark);
 }

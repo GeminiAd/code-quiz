@@ -12,23 +12,26 @@ class Highscore {
 
     /* 
      *  This is the function that we will use to sort each highscore in the highscores array.
+     *  NOTE:   This function is static as isn't a property of each individual highscore object, but
+     *          still related to how a Highscore operates.
      *
      *  inputs:
      *      1. A Highscore Object a
      *      2. A Highscore Object b
      * 
-     *  The compare function supplied to the array function sort must return:
+     *  The compare function supplied to the array function sort must return a value greater than 0 if a is to be placed after b.
+     *  We want a to b placed after b if a < b, so this function must return:
      *      1. 0 if the two values are equal.
-     *      2. 1 if a > b.
-     *      3. 2 if a < b.
+     *      2. -1 if a > b.
+     *      3. 1 if a < b.
      */
     static sort(a, b) {
         if (a.score === b.score) {
             return 0;
         } else if (a.score > b.score) {
-            return 1;
-        } else {
             return -1;
+        } else {
+            return 1;
         }
     }
 }
@@ -73,7 +76,7 @@ class Question {
 
         for (var i = 0; i < this.answers.length; i++) {
             var buttonToAdd = document.createElement("button");
-            buttonToAdd.className = "answer-button";
+            buttonToAdd.className = "round answer-button";
             buttonToAdd.id = "answer-button-" + i;
 
             if (i === this.correctAnswerIndex) {
@@ -84,7 +87,7 @@ class Question {
 
             buttonToAdd.textContent = (i + 1) + ". " + this.answers[i];
 
-            buttonToAdd.addEventListener("click", answerButtonOnClick);
+            //buttonToAdd.addEventListener("click", answerButtonOnClick);
 
             questionSection.appendChild(buttonToAdd);
         }
@@ -111,20 +114,57 @@ const quizQuestions = [
 
 const maxTime = 75;
 
-var bodyElement = document.querySelector("body");
-var mainElement = document.querySelector("main");
-var splashPageElement = document.getElementById("splash-page");
-var startQuizButtonElement = document.getElementById("start-quiz-button");
-var timerElement = document.getElementById("timer");
+var bodyElement;
+var mainElement;
+var splashPageElement;
+var startQuizButtonElement;
+var timerElement;
 var donePageElement;
+var headerElement, highscoresLinkElement, timeLeftElement;
 var currentQuestionIndex;
+var finalScore;
 var timeLeft = 0;
 var timeInterval; // I need to define the timeInterval here so I can stop it when the user answers all the Questions
 
 /*
  *  The highscores will be stored as an array of Highscore Objects.
+ *  Note: This will have to be sorted every time a Highscore Object is added to it.
  */
 var highscores;
+
+/* 
+ *  Adds answer button clicks to all the answer buttons on the Question page.
+ *  This is only necessary because I remove the click events after the user clicks an answer button:
+ *  Otherwise, I would just add the click events when the done page is created.
+ */
+function addAnswerButtonClickEvents() {
+    answerButtonElements = document.querySelectorAll(".answer-button");
+
+    for (var i = 0; i < answerButtonElements.length; i++) {
+        answerButtonElements[i].addEventListener("click", answerButtonOnClick);
+    }
+}
+
+/*
+ *  Adds a highscore to our list of highscores
+ *
+ *  When we add a new highscore we need to:
+ *      1. Add it to our list of highscores.
+ *      2. Sort the list of highscores, so the highest score is at the top.
+ *      3. Write the list of highscores to local storage
+ */
+function addHighscore(highscore) {
+    /* 1. Add it to our list of highscores. */
+    highscores.push(highscore);
+
+    /* 2. Sort the list of highscores, so the highest score is at the top. */
+    if (highscores.length > 1) {
+        highscores.sort(Highscore.sort);
+    }
+
+    /* 3. Write the list of highscores to local storage */
+    writeHighscores();
+}
 
 /*
  *  Defines the behaviour of the quiz when an answer button is clicked.
@@ -158,14 +198,14 @@ function answerButtonOnClick(event) {
     /* 
      *  5. Wait a little bit so the user can see if they were correct or not. 
      *
-     *  Specifically, we wait about a second.
+     *  Specifically, we wait about a half a second.
      */
     var timeInterval = setInterval(function () {
         clearInterval(timeInterval);
 
         /* 6. Then go to the next Question, if there is one. */
         nextQuestion();
-    }, 900);
+    }, 500);
 }
 
 /* 
@@ -185,6 +225,7 @@ function clearMainContent() {
 
 /* 
  *  Creates and sets the done page HTML element.
+ *  Since this page is fairly static, I'm creating it once, when the application starts.
  *
  *  The following steps must be taken to create the done page:
  *      1. Create a section element representing the content of the section.
@@ -197,8 +238,7 @@ function clearMainContent() {
  *      8. Set our global reference to the done page equal to the section element.
  */
 function createDonePage() {
-    console.log("Creating the done page.");
-
+    
     /* 1. Create a section element representing the content of the section. */
     var sectionToCreate = document.createElement("section");
     sectionToCreate.className = "done-section";
@@ -243,9 +283,11 @@ function createDonePage() {
 
     formElementToAdd.appendChild(inputToAdd);
 
-    var buttonToAdd = document.createElement("button");
+    var buttonToAdd = document.createElement("input");
     buttonToAdd.id = "submit-initials-button";
-    buttonToAdd.textContent = "Submit";
+    buttonToAdd.className = "round";
+    buttonToAdd.setAttribute("type", "submit");
+    buttonToAdd.setAttribute("value", "Submit");
     buttonToAdd.addEventListener("click", submitInitialsButtonClick);
 
     formElementToAdd.appendChild(buttonToAdd);
@@ -279,15 +321,118 @@ function displayCorrectness(answer) {
 }
 
 /*
+ *  Displays our list of Highscores for this Quiz.
+ *  
+ *  To display the Highscores Page we need to:
+ *      1. Remove the elements from the header.
+ *      2. Clear the main content window.
+ *      3. Generate the HTML element for the Highscores page.
+ *      4. Load the highscores page element into the content window.
+ */
+function displayHighscoresPage() {
+    /* 1. Remove the elements from the header. */
+    removeHeaderElements();
+
+    /* 2. Clear the main content window. */
+    clearMainContent();
+
+    /* 3. Generate the HTML element for the Highscores page. */
+    var highscoresContentElement = generateHighscoresPage();
+
+    /* 4. Load the highscores page element into the content window. */
+    loadContent(highscoresContentElement);
+}
+
+/*
+ *  Generates and returns the Highscores Page.
+ *  Since we will be adding to the Highscores page when the user submits a new Highscore, the Highscores page will be generated each time the
+ *  user goes to it.
+ * 
+ *  Steps to generate the Highscores Page:
+ *      1. Create the Highscores section element to be added to the page.
+ *      2. Create the Highscores header element, add it as a child of the section element.
+ *      3. Create an ordered list element.
+ *      4. For each entry in our highscores list
+ *          4. a. Create an li element, add it as a child of the ordered list element.
+ *      5. Add the ordered list element as a child to the section element.
+ *      6. Create a button to go back, add it as a child element of the section element.
+ *      7. Create a button to clear the highscores, add it as a child element of the section element.
+ *      8. Return the section element.
+ */
+function generateHighscoresPage() {
+    var highscoresSectionElement = document.createElement("section");
+    highscoresSectionElement.className = "highscores-section";
+
+    /* 2. Create the Highscores header element, add it as a child of the section element. */
+    var headerElementToAdd = document.createElement("h2");
+    headerElementToAdd.className = "highscores-header";
+    headerElementToAdd.textContent = "Highscores";
+
+    highscoresSectionElement.appendChild(headerElementToAdd);
+
+    /* 3. Create an ordered list element. */
+    var listToAdd = document.createElement("ol");
+    listToAdd.className = "highscores-list";
+
+    /* 4. For each entry in our highscores list. */
+    for (var i = 0; i < highscores.length; i++) {
+        /*  4. a. Create an li element, add it as a child of the ordered list element. */
+        var listItemToAdd = document.createElement("li");
+        listItemToAdd.className = "highscore";
+        listItemToAdd.textContent = (i + 1) + ". " + highscores[i].initials + " - " + highscores[i].score;
+
+        listToAdd.appendChild(listItemToAdd);
+    }
+
+    /* 5. Add the ordered list element as a child to the section element. */
+    highscoresSectionElement.appendChild(listToAdd);
+
+    /* 6. Create a button to go back, add it as a child element of the section element. */
+    var goBackButtonToAdd = document.createElement("button");
+    goBackButtonToAdd.className = "round go-back-button";
+    goBackButtonToAdd.textContent = "Go Back";
+    goBackButtonToAdd.addEventListener("click", restoreSplashPage);
+
+    highscoresSectionElement.appendChild(goBackButtonToAdd);
+
+    /* 7. Create a button to clear the highscores, add it as a child element of the section element. */
+    clearHighscoresButtonToAdd = document.createElement("button");
+    clearHighscoresButtonToAdd.className = "round clear-highscores";
+    clearHighscoresButtonToAdd.textContent = "Clear Highscores"
+    clearHighscoresButtonToAdd.addEventListener("click", resetHighscores);
+
+    highscoresSectionElement.appendChild(clearHighscoresButtonToAdd);
+
+    console.log(highscoresSectionElement);
+
+    /* 8. Return the section element. */
+    return highscoresSectionElement;
+}
+
+/*
  *  Initializes some content before the game is played.
  *  Specifically, I'm going to create all of the code quiz screen HTML elements before the game starts so it's quick and easy to load.
- *  Additionally, I need to load any highscores, if they exist
+ *  Additionally, I need to load any highscores, if they exist.
+ *  Finally, I need to set the headerElement, highscoresLink and timeLeft elements so I can easily remove the highScoresLink and timeLeft elements
+ *  from the headerElement later.
  */
 function initializeContent() {
-    console.log("Initializing Content");
+    bodyElement = document.querySelector("body");
+    mainElement = document.querySelector("main");
+    splashPageElement = document.getElementById("splash-page");
+    startQuizButtonElement = document.getElementById("start-quiz-button");
+    timerElement = document.getElementById("timer");
+    headerElement = document.querySelector("header");
+    highscoresLinkElement = document.getElementById("highscores-button");
+    timeLeftElement = document.getElementById("time-left");
+    var highscoresButton = document.getElementById("highscores-button");
 
     createDonePage();
+
     loadHighscores();
+
+    startQuizButtonElement.addEventListener("click", startQuiz);
+    highscoresButton.addEventListener("click", displayHighscoresPage);
 }
 
 /* Loads the given HTML element into the main content window below the header. */
@@ -296,40 +441,53 @@ function loadContent(element) {
 }
 
 function loadHighscores() {
-    highscores = [];
+    highscores = [ 
+        new Highscore("AF", 80),
+        new Highscore("BC", 65),
+        new Highscore("BM", 30)];
 }
 
 /* Loads the given question object into the main content window. */
 function loadQuestion(question) {
     currentQuestionElement = question.element;
     loadContent(currentQuestionElement);
+
+    addAnswerButtonClickEvents();
 }
 
 /* 
  *  The logic of proceeding to the next question will go here.
  *  The steps we need to take to proceed to the next question:
- *      1. Clear the main content window.
- *      2. Check if we are at the end of the quiz. If so end the quiz and proceed to the display score screen.
- *      3. Otherwise, load the next question.
+ *      1. Check if we are at the end of the quiz. If so end the quiz and proceed to the display score screen.
+ *      2. Otherwise, clear the main content window and load the next question.
  */
 function nextQuestion() {
-    /* 1. Clear the main content window. */
-    clearMainContent();
-
-    /* 2. Check if we are at the end of the quiz. If so, end the quiz and proceed to the highscore screen */
+    /* 1. Check if we are at the end of the quiz. If so, end the quiz and proceed to the done page. */
     currentQuestionIndex++;
+
+    removeCorrectness();
 
     if (currentQuestionIndex === quizQuestions.length) {
         stopQuiz();
     } 
-    /* 3. Otherwise, load the next question. */
+    /* 2. Otherwise, clear the main content window and load the next question. */
     else {
+        clearMainContent();
         loadQuestion(quizQuestions[currentQuestionIndex]);
     }
 }
 
+/* Does the same thing as displayHighscores, except it doesn't remove the header. 
+function refreshHighscoresContent() {
+    clearMainContent();
+
+    var highscoresContentElement = generateHighscoresPage();
+
+    loadContent(highscoresContentElement);
+} */
+
 /* 
- *  Removes all the eventListeners from the current questionElement. This is necessary so that the user doesn't click an answer in the seconds after
+ *  Removes all the eventListeners from the answer buttons on the page. This is necessary so that the user doesn't click an answer in the seconds after
  *  the application displays whether they were correct or not and before the page displays the next question.
  */
 function removeAnswerButtonListeners() {
@@ -338,6 +496,67 @@ function removeAnswerButtonListeners() {
     for (var i = 0; i < answerButtonElements.length; i++) {
         answerButtonElements[i].removeEventListener("click", answerButtonOnClick);
     }
+}
+
+/* 
+ *  Removes the correctness display from the current question. This is needed so that the next time the quiz is started, it doesnt show
+ *  Correct! or Wrong! from the previous attempt.
+ */
+function removeCorrectness() {
+    var correctnessElement = document.querySelector(".correctness");
+    correctnessElement.remove();
+}
+
+/* Removes the link to the highscores page and the timer element from the header */
+function removeHeaderElements() {
+    highscoresLinkElement.remove();
+    timeLeftElement.remove();
+}
+
+/* 
+ *  Resets the list of highscores.
+ *  In order to reset the highscores list we have to:
+ *      1. Set our list of highscores equal to an empty array.
+ *      2. Reload the highscores page so the page reflects the reset.
+ *      3. Write the new highscores list.
+ */
+function resetHighscores() {
+    /* To save us some work, we'll only do this if there is information to reset. */
+    if (highscores.length > 0) {
+        /* 1. Set our list of highscores equal to an empty array. */
+        highscores = [];
+
+        /* 2. Reload the highscores page so the page reflects the reset. */
+        displayHighscoresPage();
+
+        /* 3. Write the new highscores list. */
+        writeHighscores();
+    }
+}
+
+/* Restores the elements in the header. */
+function restoreHeader() {
+    headerElement.appendChild(highscoresLinkElement);
+    headerElement.appendChild(timeLeftElement);
+}
+
+
+/* 
+ *  Goes back to the main page from the highscores screen.
+ *  To restore the splash page we must:
+ *      1. Clear the main content window.
+ *      2. Restore the header.
+ *      3. Load the splash page into the main content window.
+ */
+function restoreSplashPage() {
+    /* 1. Clear the main content window. */
+    clearMainContent();
+
+    /* 2. Restore the header. */
+    restoreHeader();
+
+    /* 3. Load the splash page into the main content window. */
+    loadContent(splashPageElement);
 }
 
 /* Sets the text in the timer box equal to the current value of timeLeft. */
@@ -375,32 +594,57 @@ function startQuiz() {
  *
  *  When we stop the quiz we must:
  *  1. Stop the timer.
- *  2. Load the done page.
- *  3. Update the user score on the done page.
+ *  2. Clear the main content window.
+ *  3. Load the done page.
+ *  4. Set the final score equal to time left, as all displaying of the final score will be done with this variable.
+ *  5. Update the user score on the done page.
  */
 function stopQuiz() {
     /* 1. Stop the timer. */
     clearInterval(timeInterval);
     console.log("QUIZ STOPPED");
 
-    /* 2. Load the done page. */
+    /* 2. Clear the main content window. */
+    clearMainContent();
+
+    /* 3. Load the done page. */
     loadContent(donePageElement);
 
-    /* 3. Update the user score on the done page. */
+    /* 4. Set the final score equal to time left, as all displaying of the final score will be done with this variable. */
+    finalScore = timeLeft;
+
+    /* 5. Update the user score on the done page. */
     updateScore();
 }
 
+/* 
+ *  When the submit initials button is clicked, we need to:
+ *      1. Grab the input initials from the text input
+ *      2. Add a new Highscores Object to our highscores list with the input initials and final score.
+ *      3. Display the Highscores Page.
+ */
 function submitInitialsButtonClick(event) {
-    event.preventDefault();
+    event.preventDefault(); // Stops page refresh on click
+
+    /* 1. Grab the input initials from the text input */
+    var textInputElement = document.getElementById("initials");
+    var initialsToAdd = textInputElement.value;
+
+    /* 2. Add a new Highscores Object to our highscores list with the input initials and final score. */
+    addHighscore(new Highscore(initialsToAdd, finalScore));
+
+    /* 3. Display the Highscores Page. */
+    displayHighscoresPage();
 }
 
 /* Updates the user score in the done page when the user finishes the game. */
 function updateScore() {
     var scoreTextElement = document.getElementById("score");
-    console.log(scoreTextElement);
-    scoreTextElement.textContent = timeLeft;
+    scoreTextElement.textContent = finalScore;
 }
 
-startQuizButtonElement.addEventListener("click", startQuiz);
+/* Writes our list of highscores to local storage. */
+function writeHighscores() {
+}
 
 initializeContent();
