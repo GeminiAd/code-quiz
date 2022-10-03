@@ -226,8 +226,43 @@ header {
         font-size: 20px;
     }
 
+    .done-section-header {
+        padding: 5px;
+        margin: 5px;
+    }
+    
+    .score-text {
+        padding: 5px;
+        margin: 5px;
+    
+        font-size: 18px;
+    }
+    
+    .submit-initials-form {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .submit-initials-label {
+        padding: 0;
+    }
+    
+    #submit-initials-button {
+        margin: 0;
+    }
+    
+    #initials {
+        padding: 0;
+    }
+
     .submission-error-text {
-        margin-top: 10px;
+        padding: 5px;
+        margin: 5px;
+
         font-size: 14px;
+    }
+
+    #highscores-button {
+        font-size: 18px;
     }
 }
