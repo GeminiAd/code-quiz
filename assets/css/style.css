@@ -185,6 +185,7 @@ header {
     margin: 10px;
     font-style: italic;
     color: red;
+    line-height: 125%;
 }
 
 @media screen and (max-width: 992px) {
@@ -206,8 +207,21 @@ header {
         margin-top: 20px;
     }
 
+    .splash-header {
+        font-size: 48px;
+    }
+
+    .splash-subheader {
+        font-size: 22px;
+    }
+
     .question-prompt {
-        font-size: 40px;
+        font-size: 38px;
         line-height: 125%;
+    }
+
+    .submission-error-text {
+        margin-top: 10px;
+        font-size: 14px;
     }
 }
