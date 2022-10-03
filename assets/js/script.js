@@ -109,7 +109,7 @@ const quizQuestions = [
         0),
     new Question(
         "Arrays in JavaScript can be used to store ______.",
-        ["numbers and strings", "other arrays", "booleans", "all of the above"],
+        ["numbers and strings", "other arrays", "booleans", "all of above"],
         3),
     new Question(
         "JavaScript is an example of a ________-typed programming language.",
@@ -237,9 +237,9 @@ function checkIfCorrect(answerButtonElement) {
  *  Returns true if this is valid input, false otherwise.
  */
 function checkInitialsInput(input) {
-    var upperCaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var lowerCaseCharacters = "abcdefghijklmnopqrstuvwxyz";
-    var validCharacters = upperCaseCharacters + lowerCaseCharacters;
+    let upperCaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let lowerCaseCharacters = "abcdefghijklmnopqrstuvwxyz";
+    let validCharacters = upperCaseCharacters + lowerCaseCharacters;
 
     if (input.length !== 2) {
         return false;
@@ -480,6 +480,8 @@ function initializeContent() {
     timeLeftElement = document.getElementById("time-left");
     var highscoresButton = document.getElementById("highscores-button");
 
+    //shuffleAnswers();
+
     createDonePage();
 
     loadHighscores();
@@ -620,6 +622,53 @@ function restoreSplashPage() {
 /* Sets the text in the timer box equal to the current value of timeLeft. */
 function setTimerText() {
     timerElement.textContent = timeLeft;
+}
+
+
+/* 
+ *  This function takes our list of Questions, and, for each Question, shuffles around the answers in its answers array, and then updates the
+ *  the correct answer index. Also, it looks like I generate the HTML as soon as the Question is created, so I need to regenerate the HTML
+ *  element in each Question as I do that as well.
+ * 
+ *  Credit to StackOverflow:
+ *  https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ *  for an example of how to shuffle an array that I heavilly borrowed from.
+ */
+function shuffleAnswers() {
+    console.log("SHUFFLING ANSWERS");
+
+    for (var i = 0; i < quizQuestions.length; i++) {
+        console.log(quizQuestions[i]);
+        console.log("Array before shuffling: " + quizQuestions[i].answers);
+
+        let currentIndex = quizQuestions[i].answers.length,  randomIndex;
+
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+            // Pick a remaining element.
+            currentIndex--;
+            randomIndex = Math.floor(Math.random() * currentIndex);
+
+            console.log("Swapping " + quizQuestions[i].answers[currentIndex] + " and " + quizQuestions[i].answers[randomIndex]);
+            
+            // If either of these indexes that we are swapping is the index of the correct answer, I have the swap the correct answer index in the question.
+            if (quizQuestions[i].correctAnswerIndex === currentIndex) {
+                quizQuestions[i].correctAnswerIndex = randomIndex;
+            } else if (quizQuestions[i].correctAnswerIndex === randomIndex) {
+                quizQuestions[i].correctAnswerIndex = currentIndex;
+            }
+
+            // And swap it with the current element.
+            let tempAnswer = quizQuestions[i].answers[currentIndex];
+            quizQuestions[i].answers[currentIndex] = quizQuestions[i].answers[randomIndex];
+            quizQuestions[i].answers[randomIndex] = tempAnswer;
+        }
+
+        console.log("Array after shuffling: " + quizQuestions[i].answers);
+        console.log(quizQuestions[i]);
+
+        quizQuestions[i].element = quizQuestions[i].createElement();
+    }
 }
 
 /* The logic of starting the timer goes here here. */
