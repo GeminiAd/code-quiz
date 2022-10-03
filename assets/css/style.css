@@ -7,6 +7,13 @@
     box-sizing: border-box;
 }
 
+main {
+    margin: 50px;
+
+    display: flex;
+    justify-content: center;
+}
+
 /*
  *  The header contains two elements: the link to view highscores on the left and the timer on the right
  */
@@ -30,9 +37,11 @@ header {
     color: var(--dark-button);
 }
 
-#splash-page {
-    margin: 50px;
+.content-section {
+    width: 40%;
+}
 
+#splash-page {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,8 +58,6 @@ h1 {
 .splash-subheader {
     margin: 5px;
     padding: 5px;
-
-    width: 50%;
 
     line-height: 150%;
 
@@ -75,15 +82,7 @@ h1 {
     cursor: pointer;
 }
 
-.question-section {
-    margin-top: 50px;
-
-    margin-left: 20%;
-}
-
 .question-prompt {
-    width: 50%;
-
     padding: 5px;
     margin: 5px;
 
@@ -102,8 +101,6 @@ h1 {
 }
 
 .correctness {
-    width: 50%;
-
     padding: 10px;
     margin: 10px;
 
@@ -113,12 +110,6 @@ h1 {
     font-size: 24px;
 
     border-top: thick solid gray;
-}
-
-.done-section {
-    margin-top: 50px;
-
-    margin-left: 20%;
 }
 
 .done-section-header {
@@ -151,13 +142,6 @@ h1 {
 
 #initials {
     padding: 5px;
-}
-
-.highscores-section {
-    width: 50%;
-
-    margin-top: 50px;
-    margin-left: 20%;
 }
 
 .highscores-header {

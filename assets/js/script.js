@@ -56,7 +56,7 @@ class Question {
      *  Returns the HTML representation of this question.
      *
      *  The HTML returned will be of the format:
-     *  <section class="question-section">
+     *  <section id="question-section" class="content-section">
      *      <h3 class="question-prompt">this.question</h3>
      *      <button class="answer-button" id="answer-button-0">this.answers[0]</button>
      *      <button class="answer-button" id="answer-button-1">this.answers[1]</button>
@@ -66,7 +66,8 @@ class Question {
      */
     createElement() {
         var questionSection = document.createElement("section");
-        questionSection.className = "question-section";
+        questionSection.id = "question-section";
+        questionSection.className = "content-section";
     
         var questionPrompt = document.createElement("h3");
         questionPrompt.className = "question-prompt";
@@ -232,9 +233,6 @@ function checkInitialsInput(input) {
     var lowerCaseCharacters = "abcdefghijklmnopqrstuvwxyz";
     var validCharacters = upperCaseCharacters + lowerCaseCharacters;
 
-    console.log(upperCaseCharacters.length);
-    console.log(lowerCaseCharacters.length);
-
     if (input.length !== 2) {
         return false;
     } else {
@@ -277,7 +275,8 @@ function createDonePage() {
     
     /* 1. Create a section element representing the content of the section. */
     var sectionToCreate = document.createElement("section");
-    sectionToCreate.className = "done-section";
+    sectionToCreate.id = "done-section";
+    sectionToCreate.className = "content-section";
 
     /* 2. Create a header element saying "All done!", add it as a child of the section element. */
     var headerToAdd = document.createElement("h3");
@@ -338,8 +337,6 @@ function createDonePage() {
 
     sectionToCreate.appendChild(errorTextToAdd);
 
-    console.log(sectionToCreate);
-
     /* 8. Set our global reference to the done page equal to the section element. */
     donePageElement = sectionToCreate;
 }
@@ -359,7 +356,7 @@ function displayCorrectness(answer) {
         pElementToAdd.textContent = "Wrong!";
     }
 
-    var questionSectionElement = document.querySelector(".question-section");
+    var questionSectionElement = document.getElementById("question-section");
     questionSectionElement.appendChild(pElementToAdd);
 }
 
@@ -367,7 +364,6 @@ function displayCorrectness(answer) {
 function displaySubmissionErrorText() {
     var errorTextElement = document.querySelector(".submission-error-text");
     errorTextElement.textContent = "Error: initials must be two characters chosen from uppercase or lowercase characters.";
-    console.log(errorTextElement);
 }
 
 /*
@@ -411,7 +407,8 @@ function displayHighscoresPage() {
  */
 function generateHighscoresPage() {
     var highscoresSectionElement = document.createElement("section");
-    highscoresSectionElement.className = "highscores-section";
+    highscoresSectionElement.id = "highscores-section";
+    highscoresSectionElement.className = "content-section";
 
     /* 2. Create the Highscores header element, add it as a child of the section element. */
     var headerElementToAdd = document.createElement("h2");
@@ -677,8 +674,6 @@ function stopQuiz() {
  */
 function submitInitialsButtonClick(event) {
     event.preventDefault(); // Stops page refresh on click
-
-    console.log(event);
 
     /* 1. Grab the input initials from the text input */
     var textInputElement = document.getElementById("initials");
