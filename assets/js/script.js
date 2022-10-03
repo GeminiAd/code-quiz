@@ -144,7 +144,7 @@ const quizQuestions = [
         1)
 ];
 
-const maxTime = 75;
+const maxTime = 100;
 
 var bodyElement;
 var mainElement;
