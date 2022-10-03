@@ -47,9 +47,13 @@ header {
     align-items: center;
 }
 
-h1 {
+.splash-header {
     margin: 5px;
     padding: 5px;
+
+    text-align: center;
+
+    line-height: 125%;
 
     font-size: 52px;
     font-weight: bold;
@@ -181,4 +185,29 @@ h1 {
     margin: 10px;
     font-style: italic;
     color: red;
+}
+
+@media screen and (max-width: 992px) {
+    .content-section {
+        width: 70%;
+    }
+}
+
+/* TABLET PORTRAIT */
+@media screen and (max-width: 768px) {
+    .content-section {
+        width: 100%;
+    }
+}
+
+/* MOBILE PHONE DISPLAY */
+@media screen and (max-width: 520px) {
+    main {
+        margin-top: 20px;
+    }
+
+    .question-prompt {
+        font-size: 40px;
+        line-height: 125%;
+    }
 }

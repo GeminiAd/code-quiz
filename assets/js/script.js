@@ -12,8 +12,8 @@ class Highscore {
 
     /* 
      *  This is the function that we will use to sort each highscore in the highscores array.
-     *  NOTE:   This function is static as isn't a property of each individual highscore object, but
-     *          still related to how a Highscore operates.
+     *  NOTE:   This function is static as isn't a property of each individual highscore object,
+     *          but still related to the Highscore Object.
      *
      *  inputs:
      *      1. A Highscore Object a
