@@ -19,7 +19,7 @@ This is just a code quiz application that I wrote using JavaScript, HTML, and CS
 ## Key Features
 
 - Test your JavaScript coding knowledge.
-- Boasts a responsive design. This quiz looks good on a desktop, tablet, or mobile device. I encourage you to view this site on a desktop, tablet, and mobile phone. The desktop and tablet displays aren't that much different, but the mobile display is different. Check it out on your mobile phone!
+- Boasts a responsive design: this quiz looks good on a desktop, tablet, or mobile device. I encourage you to view this site on a desktop, tablet, and mobile phone. The desktop and tablet displays aren't that much different, but the mobile display is different. Check it out on your mobile phone!
 
 ## Usage
 
