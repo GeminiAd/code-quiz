@@ -4,6 +4,8 @@
 
 ------------------------------------------------------
 
+![Code Quiz Demo](./assets/images/code-quiz-demo.gif)
+
 <a href="#description">Description</a> •
 <a href="#key-features">Key Features</a> •
 <a href="#usage">Usage</a> •
