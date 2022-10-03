@@ -224,7 +224,7 @@ header {
 
     .question-prompt {
         font-size: 36px;
-        line-height: 100%;
+        line-height: 125%;
     }
 
     .correctness {
@@ -255,10 +255,14 @@ header {
     
     #submit-initials-button {
         margin: 0;
+
+        margin-top: 5px;
     }
     
     #initials {
         padding: 0;
+
+        display: block;
     }
 
     .submission-error-text {
