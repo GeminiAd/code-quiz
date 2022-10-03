@@ -204,20 +204,26 @@ header {
 /* MOBILE PHONE DISPLAY */
 @media screen and (max-width: 520px) {
     main {
-        margin-top: 20px;
+        margin: 20px;
     }
 
     .splash-header {
-        font-size: 48px;
+        font-size: 44px;
     }
 
     .splash-subheader {
         font-size: 22px;
     }
 
+
     .question-prompt {
-        font-size: 38px;
+        font-size: 36px;
         line-height: 125%;
+    }
+
+    .correctness {
+        margin-top: 30px;
+        font-size: 20px;
     }
 
     .submission-error-text {
