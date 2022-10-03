@@ -222,10 +222,9 @@ header {
         font-size: 22px;
     }
 
-
     .question-prompt {
         font-size: 36px;
-        line-height: 125%;
+        line-height: 100%;
     }
 
     .correctness {
