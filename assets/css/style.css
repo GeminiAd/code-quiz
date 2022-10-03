@@ -77,6 +77,8 @@ header {
 
     border-radius: 10px;
 
+    font-size: 16px;
+
     background-color: var(--dark-button);
     color: white;
 }
@@ -258,11 +260,13 @@ header {
 
         margin-top: 5px;
     }
+
+    .round {
+        padding: 5px;
+    }
     
     #initials {
         padding: 0;
-
-        display: block;
     }
 
     .submission-error-text {
