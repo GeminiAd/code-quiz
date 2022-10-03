@@ -114,7 +114,15 @@ const quizQuestions = [
     new Question(
         "JavaScript is an example of a ________-typed programming language.",
         ["objectively", "dynamically", "relatively", "statically"],
-        1)
+        1),
+    new Question(
+        "In JavaScript, arrays are represented by being enclosed within:",
+        ["square brackets", "parentheses", "curly brackets", "double quotes"],
+        0),
+    new Question(
+        "Each statement in JavaScript ends with a ________.",
+        ["period", "colon", "semicolon", "quote"],
+        2)
 ];
 
 const maxTime = 75;
