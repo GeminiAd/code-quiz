@@ -97,7 +97,10 @@ class Question {
     }
 }
 
-/* The list of Questions for our Quiz. */
+/* 
+ *  The list of Questions for our Quiz. I decided that having 10 questions is sufficient for my purposes:
+ *  10 questions is long enough for a short quiz, but short enough so I can demo it easily in a .gif file.
+ */
 const quizQuestions = [
     new Question(
         "Which of the following IS NOT a primitive data type in JavaScript?",
@@ -122,7 +125,23 @@ const quizQuestions = [
     new Question(
         "Each statement in JavaScript ends with a ________.",
         ["period", "colon", "semicolon", "quote"],
-        2)
+        2),
+    new Question(
+        "Inside which element do we put the reference to the JavaScript file?",
+        ["js", "javascript", "scripting", "script"],
+        3),
+    new Question(
+        "What function in JavaScript is used to write the input string to an alert box?",
+        ["alert", "msg", "msgBox", "alertBox"],
+        0),
+    new Question(
+        "What JavaScript Object is used to generate random numbers?",
+        ["Math", "Random", "Number" , "RandomNumber"],
+        0),
+    new Question(
+        "In JavaScript, the operator a ___ b means that a and b have the same type and value.",
+        ["=", "===", "==", "!=="],
+        1)
 ];
 
 const maxTime = 75;
@@ -480,8 +499,6 @@ function initializeContent() {
     timeLeftElement = document.getElementById("time-left");
     var highscoresButton = document.getElementById("highscores-button");
 
-    //shuffleAnswers();
-
     createDonePage();
 
     loadHighscores();
@@ -626,6 +643,8 @@ function setTimerText() {
 
 
 /* 
+ *  NOTE: This function is not used as I didn't think it improved the quiz, but I'm keeping it here in case I want to use it later.
+ *
  *  This function takes our list of Questions, and, for each Question, shuffles around the answers in its answers array, and then updates the
  *  the correct answer index. Also, it looks like I generate the HTML as soon as the Question is created, so I need to regenerate the HTML
  *  element in each Question as I do that as well.
